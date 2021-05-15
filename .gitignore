@@ -1,0 +1,13 @@
+### macOS ###
+# General
+.DS_Store
+# Icon must end with two \r
+Icon?
+
+### Swift Package Manager ###
+Packages
+.build/
+xcuserdata
+DerivedData/
+*.xcodeproj
+.swiftpm
