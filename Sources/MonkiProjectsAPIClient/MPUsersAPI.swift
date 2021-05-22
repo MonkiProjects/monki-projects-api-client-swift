@@ -17,6 +17,7 @@ public struct MPUsersAPI: API {
 	
 	internal var endpoints: Endpoints { Endpoints(server: server) }
 	
+	public var encoder: JSONEncoder { MonkiProjectsAPI.encoder }
 	public var decoder: JSONDecoder { MonkiProjectsAPI.decoder }
 	public var dataLoader: DataLoader { DataLoader(decoder: decoder) }
 	
@@ -32,6 +33,10 @@ public struct MPUsersAPI: API {
 		return self.authenticatedRequest(endpoints.listUsers(page: page))
 	}
 	
+	public func createUser(_ create: User.Create) -> Publisher<Page<User.Public.Small>> {
+		return self.authenticatedRequest(endpoints.createUser(), body: create)
+	}
+	
 }
 
 extension MPUsersAPI {
@@ -42,6 +47,10 @@ extension MPUsersAPI {
 		
 		func listUsers(page: PageRequest? = nil) -> Endpoint {
 			return self.get("/users/v1", queryItems: page.queryItems)
+		}
+		
+		func createUser() -> Endpoint {
+			return self.post("/users/v1")
 		}
 		
 	}

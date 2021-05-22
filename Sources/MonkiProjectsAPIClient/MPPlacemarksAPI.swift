@@ -18,6 +18,7 @@ public struct MPPlacemarksAPI: API {
 	
 	internal var endpoints: Endpoints { Endpoints(server: server) }
 	
+	public var encoder: JSONEncoder { MonkiProjectsAPI.encoder }
 	public var decoder: JSONDecoder { MonkiProjectsAPI.decoder }
 	public var dataLoader: DataLoader { DataLoader(decoder: decoder) }
 	
