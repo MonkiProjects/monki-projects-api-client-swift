@@ -19,7 +19,7 @@ public struct Endpoint {
 		case delete = "DELETE"
 	}
 	
-	public let root: APIRoot
+	public let server: APIServer
 	public let method: Method
 	public let path: String
 	public let queryItems: [URLQueryItem]
@@ -32,8 +32,8 @@ public struct Endpoint {
 	///    dealing with dynamic components that could be invalid.
 	public var url: URL? {
 		var components = URLComponents()
-		components.scheme = "\(root.scheme)"
-		components.host = "\(root.host)"
+		components.scheme = "\(server.scheme)"
+		components.host = "\(server.host)"
 		components.path = path
 		components.queryItems = queryItems
 		
@@ -41,12 +41,12 @@ public struct Endpoint {
 	}
 	
 	public init(
-		root: APIRoot,
+		server: APIServer,
 		method: Method = .get,
 		path: String = "/",
 		queryItems: [URLQueryItem] = []
 	) {
-		self.root = root
+		self.server = server
 		self.method = method
 		self.path = path
 		self.queryItems = queryItems

@@ -15,16 +15,16 @@ public struct MPUsersAPI: API {
 	
 	public typealias Publisher<T> = AnyPublisher<T, Error>
 	
-	internal var endpoints: Endpoints { Endpoints(root: root) }
+	internal var endpoints: Endpoints { Endpoints(server: server) }
 	
 	public var decoder: JSONDecoder { MonkiProjectsAPI.decoder }
 	public var dataLoader: DataLoader { DataLoader(decoder: decoder) }
 	
-	public let root: APIRoot
+	public let server: APIServer
 	public var auth: HTTPAuthentication?
 	
-	public init(root: APIRoot, auth: HTTPAuthentication? = nil) {
-		self.root = root
+	public init(server: APIServer, auth: HTTPAuthentication? = nil) {
+		self.server = server
 		self.auth = auth
 	}
 	
@@ -38,7 +38,7 @@ extension MPUsersAPI {
 	
 	internal struct Endpoints: APIEndpoints {
 		
-		let root: APIRoot
+		let server: APIServer
 		
 		func listUsers(page: PageRequest) -> Endpoint {
 			return self.get(

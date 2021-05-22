@@ -1,5 +1,5 @@
 //
-//  APIRoot.swift
+//  APIServer.swift
 //  Networking
 //
 //  Created by Rémi Bardon on 03/09/2020.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct APIRoot {
+public struct APIServer {
 	
 	public let scheme, host: StaticString
 	

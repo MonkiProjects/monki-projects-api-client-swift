@@ -13,18 +13,18 @@ import Networking
 
 public struct MonkiProjectsAPI {
 	
-	public enum Root {
+	public enum Server {
 		
 		case production, staging, local
 		
-		var wrappedValue: APIRoot {
+		var wrappedValue: APIServer {
 			switch self {
 			case .production:
-				return APIRoot(scheme: "https", host: "api.monkiprojects.com")
+				return APIServer(scheme: "https", host: "api.monkiprojects.com")
 			case .staging:
-				return APIRoot(scheme: "https", host: "staging.api.monkiprojects.com")
+				return APIServer(scheme: "https", host: "staging.api.monkiprojects.com")
 			case .local:
-				return APIRoot(scheme: "https", host: "localhost")
+				return APIServer(scheme: "https", host: "localhost")
 			}
 		}
 		
@@ -37,21 +37,21 @@ public struct MonkiProjectsAPI {
 		return decoder
 	}()
 	
-	public let root: Root
+	public let server: Server
 	
 	public var auth: HTTPAuthentication?
 	
-	public var authAPI: MPAuthAPI { makeAPI(MPAuthAPI.init(root:auth:)) }
+	public var authAPI: MPAuthAPI { makeAPI(MPAuthAPI.init(server:auth:)) }
 	
-	public var placemarksAPI: MPPlacemarksAPI { makeAPI(MPPlacemarksAPI.init(root:auth:)) }
+	public var placemarksAPI: MPPlacemarksAPI { makeAPI(MPPlacemarksAPI.init(server:auth:)) }
 	
-	public init(root: Root = .production, auth: HTTPAuthentication? = nil) {
-		self.root = root
+	public init(server: Server = .production, auth: HTTPAuthentication? = nil) {
+		self.server = server
 		self.auth = auth
 	}
 	
-	private func makeAPI<T>(_ initializer: (APIRoot, HTTPAuthentication?) -> T) -> T {
-		initializer(self.root.wrappedValue, self.auth)
+	private func makeAPI<T>(_ initializer: (APIServer, HTTPAuthentication?) -> T) -> T {
+		initializer(self.server.wrappedValue, self.auth)
 	}
 	
 }
