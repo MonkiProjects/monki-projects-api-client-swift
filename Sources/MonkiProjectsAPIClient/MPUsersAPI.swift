@@ -28,7 +28,7 @@ public struct MPUsersAPI: API {
 		self.auth = auth
 	}
 	
-	public func listUsers(page: PageRequest) -> Publisher<Page<User.Public.Small>> {
+	public func listUsers(page: PageRequest? = nil) -> Publisher<Page<User.Public.Small>> {
 		return self.authenticatedRequest(endpoints.listUsers(page: page))
 	}
 	
@@ -40,11 +40,8 @@ extension MPUsersAPI {
 		
 		let server: APIServer
 		
-		func listUsers(page: PageRequest) -> Endpoint {
-			return self.get(
-				"abc",
-				queryItems: page.queryItems
-			)
+		func listUsers(page: PageRequest? = nil) -> Endpoint {
+			return self.get("/users/v1", queryItems: page.queryItems)
 		}
 		
 	}

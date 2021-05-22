@@ -31,7 +31,7 @@ public struct MPPlacemarksAPI: API {
 	
 	public func listPlacemarks(
 		state: Placemark.State? = nil,
-		page: PageRequest
+		page: PageRequest? = nil
 	) -> Publisher<Page<Placemark.Public>> {
 		return self.authenticatedRequest(endpoints.listPlacemarks(state: state, page: page))
 	}
@@ -46,12 +46,9 @@ extension MPPlacemarksAPI {
 		
 		func listPlacemarks(
 			state: Placemark.State? = nil,
-			page: PageRequest
+			page: PageRequest? = nil
 		) -> Endpoint {
-			return self.get(
-				"abc",
-				queryItems: [.init(name: "state", value: state?.rawValue)] + page.queryItems
-			)
+			return self.get("/placemarks/v1", queryItems: state.queryItems + page.queryItems)
 		}
 		
 	}

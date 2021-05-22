@@ -7,11 +7,12 @@
 //
 
 import Foundation
+import Networking
 import MonkiProjectsModel
 
-extension PageRequest {
+extension PageRequest: QueryParam {
 	
-	var queryItems: [URLQueryItem] {
+	public var queryItems: [URLQueryItem] {
 		return [
 			.init(name: "page", value: self.page.description),
 			.init(name: "per", value: self.per.description),
