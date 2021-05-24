@@ -37,6 +37,10 @@ public struct MPUsersAPI: API {
 		return self.authenticatedRequest(endpoints.createUser(), body: create)
 	}
 	
+	public func getUser(_ userId: UUID) -> Publisher<User.Public.Full> {
+		return self.authenticatedRequest(endpoints.getUser(userId))
+	}
+	
 }
 
 extension MPUsersAPI {
@@ -51,6 +55,10 @@ extension MPUsersAPI {
 		
 		func createUser() -> Endpoint {
 			return self.post("/users/v1")
+		}
+		
+		func getUser(_ userId: UUID) -> Endpoint {
+			return self.get("/users/v1/\(userId)")
 		}
 		
 	}
