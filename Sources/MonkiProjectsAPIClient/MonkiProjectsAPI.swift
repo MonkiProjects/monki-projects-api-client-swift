@@ -30,19 +30,8 @@ public struct MonkiProjectsAPI {
 		
 	}
 	
-	internal static let encoder: JSONEncoder = {
-		let encoder = JSONEncoder()
-		encoder.keyEncodingStrategy = .convertToSnakeCase
-		encoder.dateEncodingStrategy = .iso8601
-		return encoder
-	}()
-	
-	internal static let decoder: JSONDecoder = {
-		let decoder = JSONDecoder()
-		decoder.keyDecodingStrategy = .convertFromSnakeCase
-		decoder.dateDecodingStrategy = .iso8601
-		return decoder
-	}()
+	internal static let encoder = JSONEncoder()
+	internal static let decoder = JSONDecoder()
 	
 	public let server: Server
 	
