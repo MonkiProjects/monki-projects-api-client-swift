@@ -28,3 +28,17 @@ extension User.Create {
 	}
 	
 }
+
+extension User.Update {
+	
+	static func dummy(
+		username: String = UUID().uuidString.prefix(32).lowercased(),
+		displayName: String = UUID().uuidString.prefix(32).capitalized
+	) -> Self {
+		self.init(
+			username: username,
+			displayName: displayName
+		)
+	}
+	
+}

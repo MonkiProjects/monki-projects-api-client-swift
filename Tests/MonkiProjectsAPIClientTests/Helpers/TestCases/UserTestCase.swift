@@ -13,11 +13,11 @@ import Networking
 
 internal class UserTestCase: XCTestCase {
 	
-	// swiftlint:disable:next test_case_accessibility
+	// swiftlint:disable test_case_accessibility
 	internal var user: User.Private?
-	private var token: String?
-	// swiftlint:disable:next test_case_accessibility
+	internal var token: String?
 	internal let password = "password"
+	// swiftlint:enable test_case_accessibility
 	
 	override func setUp() {
 		super.setUp()

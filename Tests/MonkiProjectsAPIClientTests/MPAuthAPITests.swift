@@ -19,7 +19,7 @@ internal final class MPAuthAPITests: UserTestCase {
 		let user = try XCTUnwrap(self.user)
 		
 		let request = self.testApi().authAPI.logIn(username: user.username, password: self.password)
-		let token = try `await`(request)
+		let token = try self.`await`(request)
 		
 		XCTAssertEqual(token.value.count, 24)
 	}
@@ -31,7 +31,7 @@ internal final class MPAuthAPITests: UserTestCase {
 		
 		let request = self.testApi().authAPI.logIn(username: user.username, password: "invalid")
 		do {
-			_ = try `await`(request)
+			_ = try self.`await`(request)
 			XCTFail("Log in successful with invalid credentials")
 		} catch {
 			if case let .httpError(code: 401, message) = error as? NetworkError {
