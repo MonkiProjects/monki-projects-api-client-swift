@@ -24,18 +24,28 @@ public struct MonkiProjectsAPI {
 			case .staging:
 				return APIServer(scheme: "https", host: "staging.api.monkiprojects.com")
 			case .local:
-				return APIServer(scheme: "https", host: "localhost")
+				return APIServer(scheme: "http", host: "localhost", port: 8080)
 			}
 		}
 		
 	}
 	
-	internal static let encoder = JSONEncoder()
-	internal static let decoder = JSONDecoder()
+	internal static let encoder: JSONEncoder = {
+		let encoder = JSONEncoder()
+		encoder.dateEncodingStrategy = .iso8601
+		return encoder
+	}()
+	internal static let decoder: JSONDecoder = {
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+		return decoder
+	}()
 	
 	public let server: Server
 	
 	public var auth: HTTPAuthentication?
+	
+	public var usersAPI: MPUsersAPI { makeAPI(MPUsersAPI.init(server:auth:)) }
 	
 	public var authAPI: MPAuthAPI { makeAPI(MPAuthAPI.init(server:auth:)) }
 	

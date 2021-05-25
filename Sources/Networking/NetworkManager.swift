@@ -42,16 +42,9 @@ public final class NetworkManager {
 	) -> AnyPublisher<Void, Error> {
 		Just(endpoint)
 			.tryMap { (endpoint: Endpoint) -> URLRequest in
-				if let url = endpoint.url {
-					var request = URLRequest(url: url)
-					request.httpMethod = endpoint.path
-					beforeRequest(&request)
-					return request
-				} else {
-					// Abort if invalid URL
-					assertionFailure("Invalid URL")
-					throw NetworkError.invalidURL
-				}
+				var request = try endpoint.urlRequest()
+				beforeRequest(&request)
+				return request
 			}
 			.flatMap { self.execute($0) }
 			.eraseToAnyPublisher()

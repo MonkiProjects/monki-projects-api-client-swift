@@ -34,8 +34,11 @@ public struct Endpoint {
 		var components = URLComponents()
 		components.scheme = "\(server.scheme)"
 		components.host = "\(server.host)"
+		components.port = server.port
 		components.path = path
-		components.queryItems = queryItems
+		if !queryItems.isEmpty {
+			components.queryItems = queryItems
+		}
 		
 		return components.url
 	}
@@ -52,7 +55,7 @@ public struct Endpoint {
 		self.queryItems = queryItems
 	}
 	
-	public func urlRequest() throws -> URLRequest? {
+	public func urlRequest() throws -> URLRequest {
 		guard let url = self.url else {
 			// Abort if invalid URL
 			assertionFailure("Invalid URL")

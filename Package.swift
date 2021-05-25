@@ -33,5 +33,9 @@ let package = Package(
 				.product(name: "MonkiMapModel", package: "monki-projects-model"),
 			]
 		),
+		.testTarget(
+			name: "MonkiProjectsAPIClientTests",
+			dependencies: [.target(name: "MonkiProjectsAPIClient")]
+		),
 	]
 )

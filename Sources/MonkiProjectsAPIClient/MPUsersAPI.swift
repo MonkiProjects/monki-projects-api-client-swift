@@ -33,7 +33,7 @@ public struct MPUsersAPI: API {
 		return self.authenticatedRequest(endpoints.listUsers(page: page))
 	}
 	
-	public func createUser(_ create: User.Create) -> Publisher<Page<User.Public.Small>> {
+	public func createUser(_ create: User.Create) -> Publisher<User.Private> {
 		return self.authenticatedRequest(endpoints.createUser(), body: create)
 	}
 	

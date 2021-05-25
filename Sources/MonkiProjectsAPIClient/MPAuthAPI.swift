@@ -44,7 +44,7 @@ extension MPAuthAPI {
 		let server: APIServer
 		
 		func logIn() -> Endpoint {
-			return self.get("/auth/v1/login")
+			return self.post("/auth/v1/login")
 		}
 		
 	}

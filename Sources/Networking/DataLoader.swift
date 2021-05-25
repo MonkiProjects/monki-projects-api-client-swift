@@ -26,16 +26,11 @@ public final class DataLoader {
 	) -> AnyPublisher<Data, Error> {
 		Just(endpoint)
 			.tryMap { (endpoint: Endpoint) -> URLRequest in
-				if let url = endpoint.url {
-					var request = URLRequest(url: url)
-					request.httpMethod = endpoint.path
-					beforeRequest(&request)
-					return request
-				} else {
-					// Abort if invalid URL
-					assertionFailure("Invalid URL")
-					throw NetworkError.invalidURL
-				}
+				var request = try endpoint.urlRequest()
+				request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+				request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
+				beforeRequest(&request)
+				return request
 			}
 			.flatMap { Self.execute($0, with: decoder) }
 			.eraseToAnyPublisher()
@@ -47,7 +42,7 @@ public final class DataLoader {
 		with decoder: JSONDecoder = JSONDecoder(),
 		beforeRequest: (inout URLRequest) -> Void = { _ in }
 	) -> AnyPublisher<T, Error> {
-		return Self.request(endpoint, with: decoder)
+		return Self.request(endpoint, with: decoder, beforeRequest: beforeRequest)
 			.decode(type: type, decoder: decoder)
 			.eraseToAnyPublisher()
 	}
@@ -57,7 +52,7 @@ public final class DataLoader {
 		with decoder: JSONDecoder = JSONDecoder(),
 		beforeRequest: (inout URLRequest) -> Void = { _ in }
 	) -> AnyPublisher<T, Error> {
-		return Self.request(endpoint, for: T.self, with: decoder)
+		return Self.request(endpoint, for: T.self, with: decoder, beforeRequest: beforeRequest)
 	}
 	
 	public static func execute(
@@ -66,8 +61,15 @@ public final class DataLoader {
 	) -> AnyPublisher<Data, Error> {
 		return URLSession.shared
 			.dataTaskPublisher(for: request)
-			.map { $0.data }
-			.mapError { $0 }
+			.tryMap { data, response in
+				guard let response = response as? HTTPURLResponse else {
+					throw NetworkError.invalidResponse
+				}
+				guard response.statusCode < 400 else {
+					throw NetworkError.httpError(code: response.statusCode, message: String(data: data, encoding: .utf8))
+				}
+				return data
+			}
 			.eraseToAnyPublisher()
 	}
 	
@@ -94,7 +96,7 @@ public final class DataLoader {
 		_ endpoint: Endpoint,
 		beforeRequest: (inout URLRequest) -> Void = { _ in }
 	) -> AnyPublisher<Data, Error> {
-		Self.request(endpoint)
+		Self.request(endpoint, beforeRequest: beforeRequest)
 	}
 	
 	public func request<T: Decodable>(
@@ -102,14 +104,14 @@ public final class DataLoader {
 		for type: T.Type,
 		beforeRequest: (inout URLRequest) -> Void = { _ in }
 	) -> AnyPublisher<T, Error> {
-		Self.request(endpoint, for: type, with: self.decoder)
+		Self.request(endpoint, for: type, with: self.decoder, beforeRequest: beforeRequest)
 	}
 	
 	public func request<T: Decodable>(
 		_ endpoint: Endpoint,
 		beforeRequest: (inout URLRequest) -> Void = { _ in }
 	) -> AnyPublisher<T, Error> {
-		Self.request(endpoint, with: self.decoder)
+		Self.request(endpoint, with: self.decoder, beforeRequest: beforeRequest)
 	}
 	
 	public func execute(_ request: URLRequest) -> AnyPublisher<Data, Error> {

@@ -11,10 +11,12 @@ import Foundation
 public struct APIServer {
 	
 	public let scheme, host: StaticString
+	public let port: Int?
 	
-	public init(scheme: StaticString, host: StaticString) {
+	public init(scheme: StaticString, host: StaticString, port: Int? = nil) {
 		self.scheme = scheme
 		self.host = host
+		self.port = port
 	}
 	
 }
