@@ -36,6 +36,35 @@ public final class NetworkManager {
 	
 	// MARK: Methods
 	
+	public func request(
+		_ endpoint: Endpoint,
+		beforeRequest: (inout URLRequest) -> Void = { _ in }
+	) -> AnyPublisher<Void, Error> {
+		Just(endpoint)
+			.tryMap { (endpoint: Endpoint) -> URLRequest in
+				if let url = endpoint.url {
+					var request = URLRequest(url: url)
+					request.httpMethod = endpoint.path
+					beforeRequest(&request)
+					return request
+				} else {
+					// Abort if invalid URL
+					assertionFailure("Invalid URL")
+					throw NetworkError.invalidURL
+				}
+			}
+			.flatMap { self.execute($0) }
+			.eraseToAnyPublisher()
+	}
+	
+	public func execute(_ request: URLRequest) -> AnyPublisher<Void, Error> {
+		return URLSession.shared
+			.dataTaskPublisher(for: request)
+			.map { _ in }
+			.mapError { $0 }
+			.eraseToAnyPublisher()
+	}
+	
 	public func getImage(at url: URL) -> AnyPublisher<_Image, Error> {
 		let cacheKey = NSString(string: url.absoluteString)
 		

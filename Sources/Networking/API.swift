@@ -21,6 +21,34 @@ public protocol API {
 
 extension API {
 	
+	public func authenticatedRequest(
+		_ endpoint: Endpoint,
+		beforeRequest: (inout URLRequest) -> Void = { _ in }
+	) -> AnyPublisher<Void, Error> {
+		return NetworkManager.shared.request(endpoint, beforeRequest: { req in
+			req.applyAuth(self.auth)
+			beforeRequest(&req)
+		})
+	}
+	
+	public func authenticatedRequest<Input: Encodable>(
+		_ endpoint: Endpoint,
+		body: Input,
+		beforeRequest: @escaping (inout URLRequest) -> Void = { _ in }
+	) -> AnyPublisher<Void, Error> {
+		Just(body)
+			.tryMap { body -> Data in
+				try self.encoder.encode(body)
+			}
+			.flatMap { data in
+				self.authenticatedRequest(endpoint, beforeRequest: { req in
+					req.httpBody = data
+					beforeRequest(&req)
+				})
+			}
+			.eraseToAnyPublisher()
+	}
+	
 	public func authenticatedRequest<Output: Decodable>(
 		_ endpoint: Endpoint,
 		beforeRequest: (inout URLRequest) -> Void = { _ in }

@@ -41,6 +41,14 @@ public struct MPUsersAPI: API {
 		return self.authenticatedRequest(endpoints.getUser(userId))
 	}
 	
+	public func updateUser(_ userId: UUID, with update: User.Update) -> Publisher<User.Public.Full> {
+		return self.authenticatedRequest(endpoints.updateUser(userId), body: update)
+	}
+	
+	public func deleteUser(_ userId: UUID) -> Publisher<Void> {
+		return self.authenticatedRequest(endpoints.deleteUser(userId))
+	}
+	
 }
 
 extension MPUsersAPI {
@@ -59,6 +67,14 @@ extension MPUsersAPI {
 		
 		func getUser(_ userId: UUID) -> Endpoint {
 			return self.get("/users/v1/\(userId)")
+		}
+		
+		func updateUser(_ userId: UUID) -> Endpoint {
+			return self.patch("/users/v1/\(userId)")
+		}
+		
+		func deleteUser(_ userId: UUID) -> Endpoint {
+			return self.delete("/users/v1/\(userId)")
 		}
 		
 	}
