@@ -24,6 +24,7 @@ public struct MonkiProjectsAPI {
 			case .staging:
 				return APIServer(scheme: "https", host: "staging.api.monkiprojects.com")
 			case .local:
+				// swiftlint:disable:next number_separator
 				return APIServer(scheme: "http", host: "localhost", port: 8080)
 			}
 		}

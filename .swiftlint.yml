@@ -160,7 +160,7 @@ file_length:
   ignore_comment_only_lines: true
 identifier_name:
   min_length: 4
-  excluded: [id, url, uri, lhs, rhs, put, get, req]
+  excluded: [id, url, uri, lhs, rhs, put, get, req, api]
 trailing_whitespace:
   ignores_empty_lines: true
 trailing_comma:

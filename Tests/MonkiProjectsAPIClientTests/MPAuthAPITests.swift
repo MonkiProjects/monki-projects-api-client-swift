@@ -13,13 +13,15 @@ import Networking
 
 internal final class MPAuthAPITests: XCTestCase {
 	
-	var user: User.Private?
-	var token: String?
-	let password = "password"
+	private var user: User.Private?
+	private var token: String?
+	private let password = "password"
 	
 	// MARK: - Setup
 	
 	override func setUp() {
+		super.setUp()
+		
 		do {
 			let api = self.api()
 			let create = User.Create.dummy(password: self.password)
@@ -32,6 +34,8 @@ internal final class MPAuthAPITests: XCTestCase {
 	}
 	
 	override func tearDown() {
+		super.tearDown()
+		
 		do {
 			let user = try XCTUnwrap(self.user)
 			let token = try XCTUnwrap(self.token)
@@ -57,7 +61,7 @@ internal final class MPAuthAPITests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	func api(auth: HTTPAuthentication? = nil) -> MonkiProjectsAPI {
+	private func api(auth: HTTPAuthentication? = nil) -> MonkiProjectsAPI {
 		return MonkiProjectsAPI(server: .local, auth: auth)
 	}
 	
