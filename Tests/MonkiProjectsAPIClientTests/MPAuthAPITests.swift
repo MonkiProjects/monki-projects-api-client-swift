@@ -9,12 +9,13 @@
 @testable import MonkiProjectsAPIClient
 import XCTest
 import MonkiProjectsModel
+import Networking
 
 internal final class MPAuthAPITests: UserTestCase {
 	
 	// MARK: - Valid Domain
 	
-	func testFirstLogIn() throws {
+	func testLogInWithValidCredentials() throws {
 		let user = try XCTUnwrap(self.user)
 		
 		let request = self.testApi().authAPI.logIn(username: user.username, password: self.password)
@@ -24,5 +25,21 @@ internal final class MPAuthAPITests: UserTestCase {
 	}
 	
 	// MARK: - Invalid Domain
+	
+	func testLogInWithInvalidCredentials() throws {
+		let user = try XCTUnwrap(self.user)
+		
+		let request = self.testApi().authAPI.logIn(username: user.username, password: "invalid")
+		do {
+			_ = try `await`(request)
+			XCTFail("Log in successful with invalid credentials")
+		} catch {
+			if case let .httpError(code: 401, message) = error as? NetworkError {
+				XCTAssertEqual(message, "{\"error\":true,\"reason\":\"Invalid credentials for '\(user.username)'.\"}")
+			} else {
+				XCTFail("Incorrect error: \(error)")
+			}
+		}
+	}
 	
 }
