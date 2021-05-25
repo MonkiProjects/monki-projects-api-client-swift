@@ -9,23 +9,56 @@
 @testable import MonkiProjectsAPIClient
 import XCTest
 import MonkiProjectsModel
+import Networking
 
 internal final class MPAuthAPITests: XCTestCase {
 	
-	func testFirstLogIn() throws {
-		var api = MonkiProjectsAPI(server: .local, auth: nil)
-		let create = User.Create.dummy()
-		let user = try `await`(api.usersAPI.createUser(create))
-		addTeardownBlock {
-			_ = try? self.`await`(api.usersAPI.deleteUser(user.id))
+	var user: User.Private?
+	var token: String?
+	let password = "password"
+	
+	// MARK: - Setup
+	
+	override func setUp() {
+		do {
+			let api = self.api()
+			let create = User.Create.dummy(password: self.password)
+			self.user = try `await`(api.usersAPI.createUser(create))
+			let token = try `await`(api.authAPI.logIn(username: create.username, password: create.password))
+			self.token = token.value
+		} catch {
+			XCTFail(error.localizedDescription)
 		}
-		let call = api
-			.authAPI
-			.logIn(username: create.username, password: create.password)
-		let result = try `await`(call)
-		api.auth = .bearer(token: result.value) // Update auth for teardown block
+	}
+	
+	override func tearDown() {
+		do {
+			let user = try XCTUnwrap(self.user)
+			let token = try XCTUnwrap(self.token)
+			let api = self.api(auth: .bearer(token: token))
+			_ = try? self.`await`(api.usersAPI.deleteUser(user.id))
+		} catch {
+			XCTFail(error.localizedDescription)
+		}
+	}
+	
+	// MARK: - Valid Domain
+	
+	func testFirstLogIn() throws {
+		let user = try XCTUnwrap(self.user)
 		
-		XCTAssertEqual(result.value.count, 24)
+		let request = self.api().authAPI.logIn(username: user.username, password: self.password)
+		let token = try `await`(request)
+		
+		XCTAssertEqual(token.value.count, 24)
+	}
+	
+	// MARK: - Invalid Domain
+	
+	// MARK: - Helpers
+	
+	func api(auth: HTTPAuthentication? = nil) -> MonkiProjectsAPI {
+		return MonkiProjectsAPI(server: .local, auth: auth)
 	}
 	
 }

@@ -13,8 +13,8 @@ extension User.Create {
 	
 	static func dummy(
 		email: String = "\(UUID())@example.com",
-		username: String = UUID().uuidString,
-		displayName: String = UUID().uuidString,
+		username: String = UUID().uuidString.prefix(32).lowercased(),
+		displayName: String = UUID().uuidString.prefix(32).capitalized,
 		password: String = "password",
 		confirmPassword: String? = nil
 	) -> Self {
