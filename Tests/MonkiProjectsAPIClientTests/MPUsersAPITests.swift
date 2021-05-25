@@ -18,18 +18,7 @@ internal final class MPUsersAPITests: XCTestCase {
 		let create = User.Create.dummy()
 		let request = self.testApi().usersAPI.createUser(create)
 		let user = try self.`await`(request)
-		// Delete created user
-		addTeardownBlock {
-			do {
-				let logIn = self.testApi().authAPI.logIn(username: create.username, password: create.password)
-				if let token = try? self.`await`(logIn).value {
-					let delete = self.testApi(auth: .bearer(token: token)).usersAPI.deleteUser(user.id)
-					_ = try self.`await`(delete)
-				}
-			} catch {
-				XCTFail(error.localizedDescription)
-			}
-		}
+		self.deletePossiblyCreatedUserAfterTestFinishes(user.id, create.username, create.password)
 		
 		XCTAssertEqual(user.username, create.username)
 	}
