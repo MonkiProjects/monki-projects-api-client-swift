@@ -5,10 +5,10 @@ import PackageDescription
 let package = Package(
 	name: "monki-projects-api-client",
 	platforms: [
-		.iOS(.v9),
-		.macOS(.v10_15),
-		.tvOS(.v9),
-		.watchOS(.v3)
+		.iOS(.v13),
+		.macOS(.v10_10),
+		.watchOS(.v6),
+		.tvOS(.v13),
 	],
 	products: [
 		.library(
