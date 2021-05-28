@@ -6,8 +6,7 @@ let package = Package(
 	name: "monki-projects-api-client",
 	platforms: [
 		.iOS(.v13),
-		.macOS(.v10_10),
-		.watchOS(.v6),
+		.macOS(.v10_15),
 		.tvOS(.v13),
 	],
 	products: [
