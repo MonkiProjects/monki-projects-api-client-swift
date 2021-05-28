@@ -17,8 +17,8 @@ public struct MPUsersAPI: API {
 	
 	internal var endpoints: Endpoints { Endpoints(server: server) }
 	
-	public var encoder: JSONEncoder { MonkiProjectsAPI.encoder }
-	public var decoder: JSONDecoder { MonkiProjectsAPI.decoder }
+	public var encoder: JSONEncoder { MonkiProjectsAPIs.encoder }
+	public var decoder: JSONDecoder { MonkiProjectsAPIs.decoder }
 	public var dataLoader: DataLoader { DataLoader(decoder: decoder) }
 	
 	public let server: APIServer

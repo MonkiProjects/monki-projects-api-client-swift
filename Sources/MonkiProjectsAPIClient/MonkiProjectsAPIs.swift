@@ -1,5 +1,5 @@
 //
-//  MonkiProjectsAPI.swift
+//  MonkiProjectsAPIs.swift
 //  MonkiProjectsAPIClient
 //
 //  Created by Rémi Bardon on 06/10/2020.
@@ -11,7 +11,7 @@ import Combine
 import MonkiProjectsModel
 import Networking
 
-public struct MonkiProjectsAPI {
+public struct MonkiProjectsAPIs {
 	
 	public enum Server {
 		

@@ -12,8 +12,8 @@ import Networking
 
 extension XCTestCase {
 	
-	internal func testApi(auth: HTTPAuthentication? = nil) -> MonkiProjectsAPI {
-		return MonkiProjectsAPI(server: .local, auth: auth)
+	internal func testApi(auth: HTTPAuthentication? = nil) -> MonkiProjectsAPIs {
+		return MonkiProjectsAPIs(server: .local, auth: auth)
 	}
 	
 }
