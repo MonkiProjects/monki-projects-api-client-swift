@@ -11,7 +11,7 @@ import Combine
 import MonkiProjectsModel
 import Networking
 
-public struct MonkiProjectsAPIs {
+public final class MonkiProjectsAPIs: ObservableObject {
 	
 	public enum Server {
 		
@@ -43,8 +43,7 @@ public struct MonkiProjectsAPIs {
 	}()
 	
 	public let server: Server
-	
-	public var auth: HTTPAuthentication?
+	@Published public var auth: HTTPAuthentication?
 	
 	public var usersAPI: MPUsersAPI { makeAPI(MPUsersAPI.init(server:auth:)) }
 	

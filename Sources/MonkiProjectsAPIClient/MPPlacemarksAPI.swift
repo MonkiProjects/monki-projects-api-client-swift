@@ -12,18 +12,18 @@ import Combine
 import MonkiProjectsModel
 import MonkiMapModel
 
-public struct MPPlacemarksAPI: API {
+public final class MPPlacemarksAPI: API, ObservableObject {
 	
 	public typealias Publisher<T> = AnyPublisher<T, Error>
 	
-	internal var endpoints: Endpoints { Endpoints(server: server) }
+	internal lazy var endpoints = Endpoints(server: server)
 	
-	public var encoder: JSONEncoder { MonkiProjectsAPIs.encoder }
-	public var decoder: JSONDecoder { MonkiProjectsAPIs.decoder }
-	public var dataLoader: DataLoader { DataLoader(decoder: decoder) }
+	public lazy var encoder = MonkiProjectsAPIs.encoder
+	public lazy var decoder = MonkiProjectsAPIs.decoder
+	public lazy var dataLoader = DataLoader(decoder: decoder)
 	
 	public let server: APIServer
-	public var auth: HTTPAuthentication?
+	@Published public var auth: HTTPAuthentication?
 	
 	public init(server: APIServer, auth: HTTPAuthentication? = nil) {
 		self.server = server
