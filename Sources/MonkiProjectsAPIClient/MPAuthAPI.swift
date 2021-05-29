@@ -35,6 +35,10 @@ public final class MPAuthAPI: API, ObservableObject {
 		})
 	}
 	
+	public func getMe() -> Publisher<User.Private> {
+		return authenticatedRequest(endpoints.getMe())
+	}
+	
 }
 
 extension MPAuthAPI {
@@ -45,6 +49,10 @@ extension MPAuthAPI {
 		
 		func logIn() -> Endpoint {
 			return self.post("/auth/v1/login")
+		}
+		
+		func getMe() -> Endpoint {
+			return self.get("/auth/v1/me")
 		}
 		
 	}

@@ -24,6 +24,17 @@ internal final class MPAuthAPITests: UserTestCase {
 		XCTAssertEqual(token.value.count, 24)
 	}
 	
+	func testGetMe() throws {
+		let token = try XCTUnwrap(self.token)
+		
+		let expectedUser = try XCTUnwrap(self.user)
+		
+		let request = self.testApi(auth: .bearer(token: token)).authAPI.getMe()
+		let user = try self.`await`(request)
+		
+		XCTAssertEqual(user.id, expectedUser.id)
+	}
+	
 	// MARK: - Invalid Domain
 	
 	func testLogInWithInvalidCredentials() throws {
