@@ -11,9 +11,10 @@ import Combine
 
 public protocol API {
 	
+	var session: URLSession { get }
+	
 	var encoder: JSONEncoder { get }
 	var decoder: JSONDecoder { get }
-	var dataLoader: DataLoader { get }
 	
 	var auth: HTTPAuthentication? { get set }
 	
@@ -21,11 +22,14 @@ public protocol API {
 
 extension API {
 	
+	public var dataLoader: DataLoader { DataLoader(session: self.session, decoder: self.decoder) }
+	public var networkManager: NetworkManager { NetworkManager(session: self.session) }
+	
 	public func authenticatedRequest(
 		_ endpoint: Endpoint,
 		beforeRequest: (inout URLRequest) -> Void = { _ in }
 	) -> AnyPublisher<Void, Error> {
-		return NetworkManager.shared.request(endpoint, beforeRequest: { req in
+		return self.networkManager.request(endpoint, beforeRequest: { req in
 			req.applyAuth(self.auth)
 			beforeRequest(&req)
 		})

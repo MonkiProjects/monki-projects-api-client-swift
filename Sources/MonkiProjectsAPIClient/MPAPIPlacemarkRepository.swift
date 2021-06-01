@@ -1,5 +1,5 @@
 //
-//  MPPlacemarksAPI.swift
+//  MPAPIPlacemarkRepository.swift
 //  MonkiProjectsAPIClient
 //
 //  Created by Rémi Bardon on 02/05/2021.
@@ -12,34 +12,33 @@ import Combine
 import MonkiProjectsModel
 import MonkiMapModel
 
-public final class MPPlacemarksAPI: API, ObservableObject {
-	
-	public typealias Publisher<T> = AnyPublisher<T, Error>
+public final class MPAPIPlacemarkRepository: API, WebPlacemarksRepository, ObservableObject {
 	
 	internal lazy var endpoints = Endpoints(server: server)
 	
+	public let session: URLSession
 	public lazy var encoder = MonkiProjectsAPIs.encoder
 	public lazy var decoder = MonkiProjectsAPIs.decoder
-	public lazy var dataLoader = DataLoader(decoder: decoder)
 	
 	public let server: APIServer
 	@Published public var auth: HTTPAuthentication?
 	
-	public init(server: APIServer, auth: HTTPAuthentication? = nil) {
+	public init(server: APIServer, session: URLSession, auth: HTTPAuthentication? = nil) {
 		self.server = server
+		self.session = session
 		self.auth = auth
 	}
 	
 	public func listPlacemarks(
 		state: Placemark.State? = nil,
 		page: PageRequest? = nil
-	) -> Publisher<Page<Placemark.Public>> {
+	) -> AnyPublisher<Page<Placemark.Public>, Error> {
 		return self.authenticatedRequest(endpoints.listPlacemarks(state: state, page: page))
 	}
 	
 }
 
-extension MPPlacemarksAPI {
+extension MPAPIPlacemarkRepository {
 	
 	internal struct Endpoints: APIEndpoints {
 		

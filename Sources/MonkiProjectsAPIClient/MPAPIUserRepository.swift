@@ -1,5 +1,5 @@
 //
-//  MPUsersAPI.swift
+//  MPAPIUserRepository.swift
 //  MonkiProjectsAPIClient
 //
 //  Created by Rémi Bardon on 22/05/2021.
@@ -11,47 +11,46 @@ import Networking
 import Combine
 import MonkiProjectsModel
 
-public final class MPUsersAPI: API, ObservableObject {
-	
-	public typealias Publisher<T> = AnyPublisher<T, Error>
+public final class MPAPIUserRepository: API, WebUserRepository, ObservableObject {
 	
 	internal lazy var endpoints = Endpoints(server: server)
 	
+	public let session: URLSession
 	public lazy var encoder = MonkiProjectsAPIs.encoder
 	public lazy var decoder = MonkiProjectsAPIs.decoder
-	public lazy var dataLoader = DataLoader(decoder: decoder)
 	
 	public let server: APIServer
 	@Published public var auth: HTTPAuthentication?
 	
-	public init(server: APIServer, auth: HTTPAuthentication? = nil) {
+	public init(server: APIServer, session: URLSession, auth: HTTPAuthentication? = nil) {
 		self.server = server
+		self.session = session
 		self.auth = auth
 	}
 	
-	public func listUsers(page: PageRequest? = nil) -> Publisher<Page<User.Public.Small>> {
+	public func listUsers(page: PageRequest? = nil) -> AnyPublisher<Page<User.Public.Small>, Error> {
 		return self.authenticatedRequest(endpoints.listUsers(page: page))
 	}
 	
-	public func createUser(_ create: User.Create) -> Publisher<User.Private> {
+	public func createUser(_ create: User.Create) -> AnyPublisher<User.Private, Error> {
 		return self.authenticatedRequest(endpoints.createUser(), body: create)
 	}
 	
-	public func getUser(_ userId: UUID) -> Publisher<User.Public.Full> {
+	public func getUser(_ userId: UUID) -> AnyPublisher<User.Public.Full, Error> {
 		return self.authenticatedRequest(endpoints.getUser(userId))
 	}
 	
-	public func updateUser(_ userId: UUID, with update: User.Update) -> Publisher<User.Public.Full> {
+	public func updateUser(_ userId: UUID, with update: User.Update) -> AnyPublisher<User.Public.Full, Error> {
 		return self.authenticatedRequest(endpoints.updateUser(userId), body: update)
 	}
 	
-	public func deleteUser(_ userId: UUID) -> Publisher<Void> {
+	public func deleteUser(_ userId: UUID) -> AnyPublisher<Void, Error> {
 		return self.authenticatedRequest(endpoints.deleteUser(userId))
 	}
 	
 }
 
-extension MPUsersAPI {
+extension MPAPIUserRepository {
 	
 	internal struct Endpoints: APIEndpoints {
 		

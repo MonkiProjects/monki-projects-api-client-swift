@@ -1,5 +1,5 @@
 //
-//  MPAuthAPI.swift
+//  MPAPIAuthRepository.swift
 //  MonkiProjectsAPIClient
 //
 //  Created by Rémi Bardon on 02/05/2021.
@@ -11,37 +11,36 @@ import Networking
 import Combine
 import MonkiProjectsModel
 
-public final class MPAuthAPI: API, ObservableObject {
-	
-	public typealias Publisher<T> = AnyPublisher<T, Error>
+public final class MPAPIAuthRepository: API, WebAuthRepository, ObservableObject {
 	
 	internal lazy var endpoints = Endpoints(server: server)
 	
+	public let session: URLSession
 	public lazy var encoder = MonkiProjectsAPIs.encoder
 	public lazy var decoder = MonkiProjectsAPIs.decoder
-	public lazy var dataLoader = DataLoader(decoder: decoder)
 	
 	public let server: APIServer
 	@Published public var auth: HTTPAuthentication?
 	
-	public init(server: APIServer, auth: HTTPAuthentication? = nil) {
+	public init(server: APIServer, session: URLSession, auth: HTTPAuthentication? = nil) {
 		self.server = server
+		self.session = session
 		self.auth = auth
 	}
 	
-	public func logIn(username: String, password: String) -> Publisher<User.Token.Private> {
+	public func logIn(username: String, password: String) -> AnyPublisher<User.Token.Private, Error> {
 		return dataLoader.request(endpoints.logIn(), beforeRequest: { req in
 			req.setBasicAuth(username: username, password: password)
 		})
 	}
 	
-	public func getMe() -> Publisher<User.Private> {
+	public func getMe() -> AnyPublisher<User.Private, Error> {
 		return authenticatedRequest(endpoints.getMe())
 	}
 	
 }
 
-extension MPAuthAPI {
+extension MPAPIAuthRepository {
 	
 	internal struct Endpoints: APIEndpoints {
 		

@@ -42,22 +42,31 @@ public final class MonkiProjectsAPIs: ObservableObject {
 		return decoder
 	}()
 	
-	public let server: Server
-	@Published public var auth: HTTPAuthentication?
+	public var usersAPI: WebUserRepository
+	public var authAPI: WebAuthRepository
+	public var placemarksAPI: WebPlacemarksRepository
 	
-	public var usersAPI: MPUsersAPI { makeAPI(MPUsersAPI.init(server:auth:)) }
-	
-	public var authAPI: MPAuthAPI { makeAPI(MPAuthAPI.init(server:auth:)) }
-	
-	public var placemarksAPI: MPPlacemarksAPI { makeAPI(MPPlacemarksAPI.init(server:auth:)) }
-	
-	public init(server: Server = .production, auth: HTTPAuthentication? = nil) {
-		self.server = server
-		self.auth = auth
+	public init(
+		server: Server = .production,
+		session: URLSession = .shared,
+		auth: HTTPAuthentication? = nil,
+		customUsersAPI: WebUserRepository? = nil,
+		customAuthAPI: WebAuthRepository? = nil,
+		customPlacemarksAPI: WebPlacemarksRepository? = nil
+	) {
+		func makeAPI<T>(_ initializer: (APIServer, URLSession, HTTPAuthentication?) -> T) -> T {
+			initializer(server.wrappedValue, session, auth)
+		}
+		self.usersAPI = customUsersAPI ?? makeAPI(MPAPIUserRepository.init(server:session:auth:))
+		self.authAPI = customAuthAPI ?? makeAPI(MPAPIAuthRepository.init(server:session:auth:))
+		self.placemarksAPI = customPlacemarksAPI ?? makeAPI(MPAPIPlacemarkRepository.init(server:session:auth:))
 	}
 	
-	private func makeAPI<T>(_ initializer: (APIServer, HTTPAuthentication?) -> T) -> T {
-		initializer(self.server.wrappedValue, self.auth)
+	public func forEachAPI(apply body: (API) throws -> Void) rethrows {
+		try Mirror(reflecting: self).children
+			.compactMap { $0 as? API }
+			.forEach(body)
+		self.objectWillChange.send()
 	}
 	
 }
