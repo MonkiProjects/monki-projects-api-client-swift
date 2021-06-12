@@ -14,10 +14,20 @@ import MonkiMapModel
 
 public protocol WebPlacemarksRepository: AnyObject, WebAPI {
 	
+	// MARK: - Combine Publishers
+	
 	func listPlacemarks(
 		state: Placemark.State?,
 		page: PageRequest?
 	) -> AnyPublisher<Page<Placemark.Public>, Error>
+	
+	// MARK: - Swift async/await
+	
+	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+	func listPlacemarks(
+		state: Placemark.State?,
+		page: PageRequest?
+	) async throws -> Page<Placemark.Public>
 	
 }
 
@@ -27,6 +37,11 @@ extension WebPlacemarksRepository {
 	
 	public func listPlacemarks() -> AnyPublisher<Page<Placemark.Public>, Error> {
 		return self.listPlacemarks(state: nil, page: nil)
+	}
+	
+	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+	public func listPlacemarks() async throws -> Page<Placemark.Public> {
+		return try await self.listPlacemarks(state: nil, page: nil)
 	}
 	
 }

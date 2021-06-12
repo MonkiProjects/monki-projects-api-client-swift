@@ -27,11 +27,23 @@ public final class MPAPIPlacemarkRepository: WebAPI, WebPlacemarksRepository {
 		self.session = session
 	}
 	
+	// MARK: - Combine Publishers
+	
 	public func listPlacemarks(
 		state: Placemark.State? = nil,
 		page: PageRequest? = nil
 	) -> AnyPublisher<Page<Placemark.Public>, Error> {
 		return self.authenticatedRequest(endpoints.listPlacemarks(state: state, page: page))
+	}
+	
+	// MARK: - Swift async/await
+	
+	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+	public func listPlacemarks(
+		state: Placemark.State? = nil,
+		page: PageRequest? = nil
+	) async throws -> Page<Placemark.Public> {
+		return try await self.authenticatedRequest(endpoints.listPlacemarks(state: state, page: page))
 	}
 	
 }

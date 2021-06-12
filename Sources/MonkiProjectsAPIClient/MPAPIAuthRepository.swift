@@ -26,6 +26,8 @@ public final class MPAPIAuthRepository: WebAPI, WebAuthRepository {
 		self.session = session
 	}
 	
+	// MARK: - Combine Publishers
+	
 	public func logIn(username: String, password: String) -> AnyPublisher<User.Token.Private, Error> {
 		return dataLoader.request(endpoints.logIn(), beforeRequest: { req in
 			req.setBasicAuth(username: username, password: password)
@@ -34,6 +36,20 @@ public final class MPAPIAuthRepository: WebAPI, WebAuthRepository {
 	
 	public func getMe() -> AnyPublisher<User.Private, Error> {
 		return authenticatedRequest(endpoints.getMe())
+	}
+	
+	// MARK: - Swift async/await
+	
+	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+	public func logIn(username: String, password: String) async throws -> User.Token.Private {
+		return try await dataLoader.request(endpoints.logIn(), beforeRequest: { req in
+			req.setBasicAuth(username: username, password: password)
+		})
+	}
+	
+	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
+	public func getMe() async throws -> User.Private {
+		return try await authenticatedRequest(endpoints.getMe())
 	}
 	
 }

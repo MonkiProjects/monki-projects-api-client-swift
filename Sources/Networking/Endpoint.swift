@@ -64,6 +64,9 @@ public struct Endpoint {
 		
 		var request = URLRequest(url: url)
 		request.httpMethod = self.method.rawValue
+		// FIXME: Move this elsewhere (and allow custom content types)
+		request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+		request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
 		return request
 	}
 	
