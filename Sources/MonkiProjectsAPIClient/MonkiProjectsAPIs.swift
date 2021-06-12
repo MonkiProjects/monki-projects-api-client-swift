@@ -11,7 +11,7 @@ import Combine
 import MonkiProjectsModel
 import Networking
 
-public final class MonkiProjectsAPIs {
+public final class MonkiProjectsAPIs: ObservableObject {
 	
 	// MARK: - Nested types
 	
