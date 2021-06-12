@@ -19,9 +19,9 @@ extension User.Create {
 		confirmPassword: String? = nil
 	) -> Self {
 		self.init(
-			email: email,
 			username: username,
 			displayName: displayName,
+			email: email,
 			password: password,
 			confirmPassword: confirmPassword ?? password
 		)
