@@ -18,8 +18,8 @@ let package = Package(
 	dependencies: [
 		.package(
 			name: "monki-projects-model",
-			url: "https://github.com/MonkiProjects/monki-projects-model-swift.git",
-			.branch("main")
+			url: "https://github.com/MonkiProjects/monki-projects-model-swift",
+			.upToNextMajor(from: "0.3.4")
 		),
 	],
 	targets: [
