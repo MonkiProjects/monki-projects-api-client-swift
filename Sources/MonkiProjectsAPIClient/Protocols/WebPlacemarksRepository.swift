@@ -12,7 +12,7 @@ import Networking
 import MonkiProjectsModel
 import MonkiMapModel
 
-public protocol WebPlacemarksRepository: AnyObject, API {
+public protocol WebPlacemarksRepository: AnyObject, WebAPI {
 	
 	func listPlacemarks(
 		state: Placemark.State?,

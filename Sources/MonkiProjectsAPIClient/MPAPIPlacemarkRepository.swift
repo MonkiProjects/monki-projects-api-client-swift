@@ -12,21 +12,19 @@ import Combine
 import MonkiProjectsModel
 import MonkiMapModel
 
-public final class MPAPIPlacemarkRepository: API, WebPlacemarksRepository, ObservableObject {
+public final class MPAPIPlacemarkRepository: WebAPI, WebPlacemarksRepository {
 	
-	internal lazy var endpoints = Endpoints(server: server)
+	/// # Notes
+	///
+	/// 1. `Endpoints` are a computed value so that `session.server` is updated when `session` changes
+	internal var endpoints: Endpoints { Endpoints(server: session.server) }
 	
-	public let session: URLSession
+	public let session: WebAPISession
 	public lazy var encoder = MonkiProjectsAPIs.encoder
 	public lazy var decoder = MonkiProjectsAPIs.decoder
 	
-	public let server: APIServer
-	@Published public var auth: HTTPAuthentication?
-	
-	public init(server: APIServer, session: URLSession, auth: HTTPAuthentication? = nil) {
-		self.server = server
+	public init(session: WebAPISession) {
 		self.session = session
-		self.auth = auth
 	}
 	
 	public func listPlacemarks(

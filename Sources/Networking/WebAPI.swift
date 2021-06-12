@@ -1,5 +1,5 @@
 //
-//  API.swift
+//  WebAPI.swift
 //  Networking
 //
 //  Created by Rémi Bardon on 15/05/2021.
@@ -9,28 +9,26 @@
 import Foundation
 import Combine
 
-public protocol API {
+public protocol WebAPI {
 	
-	var session: URLSession { get }
+	var session: WebAPISession { get }
 	
 	var encoder: JSONEncoder { get }
 	var decoder: JSONDecoder { get }
 	
-	var auth: HTTPAuthentication? { get set }
-	
 }
 
-extension API {
+extension WebAPI {
 	
-	public var dataLoader: DataLoader { DataLoader(session: self.session, decoder: self.decoder) }
-	public var networkManager: NetworkManager { NetworkManager(session: self.session) }
+	public var dataLoader: DataLoader { DataLoader(session: self.session.urlSession, decoder: self.decoder) }
+	public var networkManager: NetworkManager { NetworkManager(session: self.session.urlSession) }
 	
 	public func authenticatedRequest(
 		_ endpoint: Endpoint,
 		beforeRequest: (inout URLRequest) -> Void = { _ in }
 	) -> AnyPublisher<Void, Error> {
 		return self.networkManager.request(endpoint, beforeRequest: { req in
-			req.applyAuth(self.auth)
+			req.applyAuth(self.session.auth)
 			beforeRequest(&req)
 		})
 	}
@@ -58,7 +56,7 @@ extension API {
 		beforeRequest: (inout URLRequest) -> Void = { _ in }
 	) -> AnyPublisher<Output, Error> {
 		return self.dataLoader.request(endpoint, beforeRequest: { req in
-			req.applyAuth(self.auth)
+			req.applyAuth(self.session.auth)
 			beforeRequest(&req)
 		})
 	}

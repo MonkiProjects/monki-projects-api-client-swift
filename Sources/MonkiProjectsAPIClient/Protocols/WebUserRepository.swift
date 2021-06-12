@@ -11,7 +11,7 @@ import Combine
 import Networking
 import MonkiProjectsModel
 
-public protocol WebUserRepository: AnyObject, API {
+public protocol WebUserRepository: AnyObject, WebAPI {
 	
 	func listUsers(page: PageRequest?) -> AnyPublisher<Page<User.Public.Small>, Error>
 	

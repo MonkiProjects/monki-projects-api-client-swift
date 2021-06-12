@@ -11,7 +11,9 @@ import Combine
 import MonkiProjectsModel
 import Networking
 
-public final class MonkiProjectsAPIs: ObservableObject {
+public final class MonkiProjectsAPIs {
+	
+	// MARK: - Nested types
 	
 	public enum Server {
 		
@@ -31,6 +33,11 @@ public final class MonkiProjectsAPIs: ObservableObject {
 		
 	}
 	
+	// MARK: - Properties
+	
+	/// A session, where custom server is set and credentials are stored
+	public var session: WebAPISession
+	
 	internal static let encoder: JSONEncoder = {
 		let encoder = JSONEncoder()
 		encoder.dateEncodingStrategy = .iso8601
@@ -42,31 +49,28 @@ public final class MonkiProjectsAPIs: ObservableObject {
 		return decoder
 	}()
 	
+	/// Monki Projects' Users API
 	public var usersAPI: WebUserRepository
+	
+	/// Monki Projects' Auth API
 	public var authAPI: WebAuthRepository
+	
+	/// Monki Projects' Placemarks API
 	public var placemarksAPI: WebPlacemarksRepository
+	
+	// MARK: - Lifecycle
 	
 	public init(
 		server: Server = .production,
-		session: URLSession = .shared,
-		auth: HTTPAuthentication? = nil,
-		customUsersAPI: WebUserRepository? = nil,
-		customAuthAPI: WebAuthRepository? = nil,
-		customPlacemarksAPI: WebPlacemarksRepository? = nil
+		urlSession: URLSession = .shared,
+		auth: HTTPAuthentication? = nil
 	) {
-		func makeAPI<T>(_ initializer: (APIServer, URLSession, HTTPAuthentication?) -> T) -> T {
-			initializer(server.wrappedValue, session, auth)
-		}
-		self.usersAPI = customUsersAPI ?? makeAPI(MPAPIUserRepository.init(server:session:auth:))
-		self.authAPI = customAuthAPI ?? makeAPI(MPAPIAuthRepository.init(server:session:auth:))
-		self.placemarksAPI = customPlacemarksAPI ?? makeAPI(MPAPIPlacemarkRepository.init(server:session:auth:))
+		self.session = WebAPISession(server: server.wrappedValue, urlSession: urlSession, auth: auth)
+		self.usersAPI = MPAPIUserRepository(session: self.session)
+		self.authAPI = MPAPIAuthRepository(session: self.session)
+		self.placemarksAPI = MPAPIPlacemarkRepository(session: self.session)
 	}
 	
-	public func forEachAPI(apply body: (API) throws -> Void) rethrows {
-		try Mirror(reflecting: self).children
-			.compactMap { $0 as? API }
-			.forEach(body)
-		self.objectWillChange.send()
-	}
+	// TODO: Cancel ongoing requests in APIs?
 	
 }

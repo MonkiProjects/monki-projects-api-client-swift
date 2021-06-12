@@ -11,7 +11,7 @@ import Combine
 import Networking
 import MonkiProjectsModel
 
-public protocol WebAuthRepository: AnyObject, API {
+public protocol WebAuthRepository: AnyObject, WebAPI {
 	
 	func logIn(username: String, password: String) -> AnyPublisher<User.Token.Private, Error>
 	
