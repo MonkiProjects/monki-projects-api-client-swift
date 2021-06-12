@@ -88,7 +88,7 @@ public final class DataLoader {
 	) async throws -> Data {
 		var request = try endpoint.urlRequest()
 		beforeRequest(&request)
-		return try await self.execute(request)
+		return try await self.executeForData(request)
 	}
 	
 	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
