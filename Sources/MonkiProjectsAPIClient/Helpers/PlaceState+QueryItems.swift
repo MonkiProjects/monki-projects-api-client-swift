@@ -1,5 +1,5 @@
 //
-//  PlacemarkState+QueryItems.swift
+//  PlaceState+QueryItems.swift
 //  MonkiProjectsAPIClient
 //
 //  Created by Rémi Bardon on 22/05/2021.
@@ -10,7 +10,7 @@ import Foundation
 import Networking
 import MonkiMapModel
 
-extension Placemark.State: QueryParam {
+extension Place.State: QueryParam {
 	
 	public var queryItems: [URLQueryItem] {
 		return [.init(name: "state", value: self.rawValue)]

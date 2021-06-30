@@ -1,5 +1,5 @@
 //
-//  MPAPIPlacemarkRepository.swift
+//  MPAPIPlaceRepository.swift
 //  MonkiProjectsAPIClient
 //
 //  Created by Rémi Bardon on 02/05/2021.
@@ -12,7 +12,7 @@ import Combine
 import MonkiProjectsModel
 import MonkiMapModel
 
-public final class MPAPIPlacemarkRepository: WebAPI, WebPlacemarksRepository {
+public final class MPAPIPlaceRepository: WebAPI, WebPlacesRepository {
 	
 	/// # Notes
 	///
@@ -29,36 +29,36 @@ public final class MPAPIPlacemarkRepository: WebAPI, WebPlacemarksRepository {
 	
 	// MARK: - Combine Publishers
 	
-	public func listPlacemarks(
-		state: Placemark.State? = nil,
+	public func listPlaces(
+		state: Place.State? = nil,
 		page: PageRequest? = nil
-	) -> AnyPublisher<Page<Placemark.Public>, Error> {
-		return self.authenticatedRequest(endpoints.listPlacemarks(state: state, page: page))
+	) -> AnyPublisher<Page<Place.Public>, Error> {
+		return self.authenticatedRequest(endpoints.listPlaces(state: state, page: page))
 	}
 	
 	// MARK: - Swift async/await
 	
 	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-	public func listPlacemarks(
-		state: Placemark.State? = nil,
+	public func listPlaces(
+		state: Place.State? = nil,
 		page: PageRequest? = nil
-	) async throws -> Page<Placemark.Public> {
-		return try await self.authenticatedRequest(endpoints.listPlacemarks(state: state, page: page))
+	) async throws -> Page<Place.Public> {
+		return try await self.authenticatedRequest(endpoints.listPlaces(state: state, page: page))
 	}
 	
 }
 
-extension MPAPIPlacemarkRepository {
+extension MPAPIPlaceRepository {
 	
 	internal struct Endpoints: APIEndpoints {
 		
 		let server: APIServer
 		
-		func listPlacemarks(
-			state: Placemark.State? = nil,
+		func listPlaces(
+			state: Place.State? = nil,
 			page: PageRequest? = nil
 		) -> Endpoint {
-			return self.get("/placemarks/v1", queryItems: state.queryItems + page.queryItems)
+			return self.get("/places/v1", queryItems: state.queryItems + page.queryItems)
 		}
 		
 	}

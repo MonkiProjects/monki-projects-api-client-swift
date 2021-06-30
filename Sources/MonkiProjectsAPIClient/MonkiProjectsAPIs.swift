@@ -55,8 +55,8 @@ public final class MonkiProjectsAPIs: ObservableObject {
 	/// Monki Projects' Auth API
 	public var authAPI: WebAuthRepository
 	
-	/// Monki Projects' Placemarks API
-	public var placemarksAPI: WebPlacemarksRepository
+	/// Monki Projects' Places API
+	public var placesAPI: WebPlacesRepository
 	
 	// MARK: - Lifecycle
 	
@@ -68,7 +68,7 @@ public final class MonkiProjectsAPIs: ObservableObject {
 		self.session = WebAPISession(server: server.wrappedValue, urlSession: urlSession, auth: auth)
 		self.usersAPI = MPAPIUserRepository(session: self.session)
 		self.authAPI = MPAPIAuthRepository(session: self.session)
-		self.placemarksAPI = MPAPIPlacemarkRepository(session: self.session)
+		self.placesAPI = MPAPIPlaceRepository(session: self.session)
 	}
 	
 	// TODO: Cancel ongoing requests in APIs?
