@@ -9,12 +9,13 @@
 import MonkiProjectsAPIClient
 import XCTest
 import Networking
+import MonkiProjectsModel
 
 extension XCTestCase {
 	
 	/// Delete created user
 	internal func deletePossiblyCreatedUserAfterTestFinishes(
-		_ userId: UUID,
+		_ userId: User.ID,
 		_ username: String,
 		_ password: String
 	) {

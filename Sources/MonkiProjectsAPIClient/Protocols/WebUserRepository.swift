@@ -19,11 +19,11 @@ public protocol WebUserRepository: AnyObject, WebAPI {
 	
 	func createUser(_ create: User.Create) -> AnyPublisher<User.Private, Error>
 	
-	func getUser(_ userId: UUID) -> AnyPublisher<User.Public.Full, Error>
+	func getUser(_ userId: User.ID) -> AnyPublisher<User.Public.Full, Error>
 	
-	func updateUser(_ userId: UUID, with update: User.Update) -> AnyPublisher<User.Public.Full, Error>
+	func updateUser(_ userId: User.ID, with update: User.Update) -> AnyPublisher<User.Public.Full, Error>
 	
-	func deleteUser(_ userId: UUID) -> AnyPublisher<Void, Error>
+	func deleteUser(_ userId: User.ID) -> AnyPublisher<Void, Error>
 	
 	// MARK: - Swift async/await
 	
@@ -34,13 +34,13 @@ public protocol WebUserRepository: AnyObject, WebAPI {
 	func createUser(_ create: User.Create) async throws -> User.Private
 	
 	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-	func getUser(_ userId: UUID) async throws -> User.Public.Full
+	func getUser(_ userId: User.ID) async throws -> User.Public.Full
 	
 	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-	func updateUser(_ userId: UUID, with update: User.Update) async throws -> User.Public.Full
+	func updateUser(_ userId: User.ID, with update: User.Update) async throws -> User.Public.Full
 	
 	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-	func deleteUser(_ userId: UUID) async throws
+	func deleteUser(_ userId: User.ID) async throws
 	
 }
 

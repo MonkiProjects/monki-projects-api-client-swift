@@ -36,15 +36,15 @@ public final class MPAPIUserRepository: WebAPI, WebUserRepository {
 		return self.authenticatedRequest(endpoints.createUser(), body: create)
 	}
 	
-	public func getUser(_ userId: UUID) -> AnyPublisher<User.Public.Full, Error> {
+	public func getUser(_ userId: User.ID) -> AnyPublisher<User.Public.Full, Error> {
 		return self.authenticatedRequest(endpoints.getUser(userId))
 	}
 	
-	public func updateUser(_ userId: UUID, with update: User.Update) -> AnyPublisher<User.Public.Full, Error> {
+	public func updateUser(_ userId: User.ID, with update: User.Update) -> AnyPublisher<User.Public.Full, Error> {
 		return self.authenticatedRequest(endpoints.updateUser(userId), body: update)
 	}
 	
-	public func deleteUser(_ userId: UUID) -> AnyPublisher<Void, Error> {
+	public func deleteUser(_ userId: User.ID) -> AnyPublisher<Void, Error> {
 		return self.authenticatedRequest(endpoints.deleteUser(userId))
 	}
 	
@@ -61,17 +61,17 @@ public final class MPAPIUserRepository: WebAPI, WebUserRepository {
 	}
 	
 	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-	public func getUser(_ userId: UUID) async throws -> User.Public.Full {
+	public func getUser(_ userId: User.ID) async throws -> User.Public.Full {
 		return try await self.authenticatedRequest(endpoints.getUser(userId))
 	}
 	
 	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-	public func updateUser(_ userId: UUID, with update: User.Update) async throws -> User.Public.Full {
+	public func updateUser(_ userId: User.ID, with update: User.Update) async throws -> User.Public.Full {
 		return try await self.authenticatedRequest(endpoints.updateUser(userId), body: update)
 	}
 	
 	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-	public func deleteUser(_ userId: UUID) async throws {
+	public func deleteUser(_ userId: User.ID) async throws {
 		return try await self.authenticatedRequest(endpoints.deleteUser(userId))
 	}
 	
@@ -91,15 +91,15 @@ extension MPAPIUserRepository {
 			return self.post("/users/v1")
 		}
 		
-		func getUser(_ userId: UUID) -> Endpoint {
+		func getUser(_ userId: User.ID) -> Endpoint {
 			return self.get("/users/v1/\(userId)")
 		}
 		
-		func updateUser(_ userId: UUID) -> Endpoint {
+		func updateUser(_ userId: User.ID) -> Endpoint {
 			return self.patch("/users/v1/\(userId)")
 		}
 		
-		func deleteUser(_ userId: UUID) -> Endpoint {
+		func deleteUser(_ userId: User.ID) -> Endpoint {
 			return self.delete("/users/v1/\(userId)")
 		}
 		
