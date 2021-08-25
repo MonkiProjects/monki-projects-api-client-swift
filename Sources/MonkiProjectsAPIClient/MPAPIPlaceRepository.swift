@@ -29,21 +29,15 @@ public final class MPAPIPlaceRepository: WebAPI, WebPlacesRepository {
 	
 	// MARK: - Combine Publishers
 	
-	public func listPlaces(
-		state: Place.State? = nil,
-		page: PageRequest? = nil
-	) -> AnyPublisher<Page<Place.Public>, Error> {
-		return self.authenticatedRequest(endpoints.listPlaces(state: state, page: page))
+	public func listPlaces(page: PageRequest? = nil) -> AnyPublisher<Page<Place.Public>, Error> {
+		return self.authenticatedRequest(endpoints.listPlaces(page: page))
 	}
 	
 	// MARK: - Swift async/await
 	
 	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-	public func listPlaces(
-		state: Place.State? = nil,
-		page: PageRequest? = nil
-	) async throws -> Page<Place.Public> {
-		return try await self.authenticatedRequest(endpoints.listPlaces(state: state, page: page))
+	public func listPlaces(page: PageRequest? = nil) async throws -> Page<Place.Public> {
+		return try await self.authenticatedRequest(endpoints.listPlaces(page: page))
 	}
 	
 }
@@ -54,11 +48,8 @@ extension MPAPIPlaceRepository {
 		
 		let server: APIServer
 		
-		func listPlaces(
-			state: Place.State? = nil,
-			page: PageRequest? = nil
-		) -> Endpoint {
-			return self.get("/places/v1", queryItems: state.queryItems + page.queryItems)
+		func listPlaces(page: PageRequest? = nil) -> Endpoint {
+			return self.get("/places/v1", queryItems: page.queryItems)
 		}
 		
 	}

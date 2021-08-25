@@ -16,18 +16,12 @@ public protocol WebPlacesRepository: AnyObject, WebAPI {
 	
 	// MARK: - Combine Publishers
 	
-	func listPlaces(
-		state: Place.State?,
-		page: PageRequest?
-	) -> AnyPublisher<Page<Place.Public>, Error>
+	func listPlaces(page: PageRequest?) -> AnyPublisher<Page<Place.Public>, Error>
 	
 	// MARK: - Swift async/await
 	
 	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-	func listPlaces(
-		state: Place.State?,
-		page: PageRequest?
-	) async throws -> Page<Place.Public>
+	func listPlaces(page: PageRequest?) async throws -> Page<Place.Public>
 	
 }
 
@@ -36,12 +30,12 @@ public protocol WebPlacesRepository: AnyObject, WebAPI {
 extension WebPlacesRepository {
 	
 	public func listPlaces() -> AnyPublisher<Page<Place.Public>, Error> {
-		return self.listPlaces(state: nil, page: nil)
+		return self.listPlaces(page: nil)
 	}
 	
 	@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
 	public func listPlaces() async throws -> Page<Place.Public> {
-		return try await self.listPlaces(state: nil, page: nil)
+		return try await self.listPlaces(page: nil)
 	}
 	
 }

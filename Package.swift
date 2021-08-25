@@ -19,7 +19,7 @@ let package = Package(
 		.package(
 			name: "monki-projects-model",
 			url: "https://github.com/MonkiProjects/monki-projects-model-swift",
-			.upToNextMinor(from: "0.5.0")
+			.upToNextMinor(from: "0.6.0")
 		),
 	],
 	targets: [
